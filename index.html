@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="user-scalable=no, maximum-scale=1, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Snake</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">    
     <style>
         .beginScreen {
             position: absolute; 
-            width: 100vw; 
-            height: 100vh;
+            width: 98vw; 
+            height: 98vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -34,7 +34,7 @@
         @media (max-width: 800px) {
             .beginScreen {
                 height: 98vh;
-                width: 100vw;
+                width: 98vw;
             }
             canvas {
                 background-color: lime;
@@ -44,6 +44,9 @@
             #container {
                 height: 98vh;
                 width: 98vw;
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
         }
         .controls {
