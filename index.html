@@ -9,12 +9,22 @@
     <style>
         .beginScreen {
             position: absolute; 
-            width: 98vw; 
-            height: 98vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            background-color: lightblue;
+        }
+        .beginScreen * {
+            padding: 4px;
+        }
+        .beginScreen .btn {
+            background-color: green;
+            color: white;
+            padding: 5px;
+            font-size: 14px;
+            text-transform: uppercase;
         }
         @media (min-width: 800px) {
             .beginScreen {
@@ -22,46 +32,41 @@
                 width: 400px;
             }
             canvas {
-                background-color: lime;
                 height: 400px;
                 width: 400px;
             }
-            #container {
-                height: 400px;
-                width: 400px;
+            .controls {
+                height: 40px;
             }
         }
         @media (max-width: 800px) {
             .beginScreen {
-                height: 98vh;
+                height: 88vh;
                 width: 98vw;
             }
             canvas {
-                background-color: lime;
-                height: 98vh;
+                height: 88vh;
                 width: 98vw;
             }
             #container {
                 height: 98vh;
                 width: 98vw;
-                display: flex;
-                justify-content: center;
-                align-items: center;
+            }
+            .controls {
+                height: 10vh;
             }
         }
         .controls {
-            left: 0;
-            bottom: 0;
-            position: absolute; 
             display: flex;
+            overflow: hidden;
         }
-        .controls * {
+        .controls {
             margin: 0px;
             padding: 0px;
             margin-left: 3px;
             margin-right: 3px;
-            display: inline-block;
             font-size: 40px;
+            color: gray;
         }
         #container {
             position: relative;
@@ -69,16 +74,28 @@
         body {
             padding-left: 1vw;
             padding-right: 1vw;
-            padding-top: 1vh;
-            padding-bottom: 1vh;
+            padding-top: 1vw;
+            padding-bottom: 1vw;
             margin: 0px;
+            font-family: sans-serif;
+            overflow: hidden;
+        }
+        .score {
+            font-size: 16px;
+            bottom: 0px;  
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: black;
+            padding-left: 5px;
         }
     </style>
 </head>
 <body>
     <div id="container">
         <div class="beginScreen">
-            start
+            <div>The classic game, snake.</div>
+            <div class="btn">eat some pizza</div>
         </div>
         <canvas id="myCanvas"></canvas>       
         <div class="controls">
@@ -86,6 +103,7 @@
             <i direction="r" class="fa fa-arrow-circle-right"></i>
             <i direction="d" class="fa fa-arrow-circle-down"></i>
             <i direction="u" class="fa fa-arrow-circle-up"></i>
+            <div class="score">Score</div>
         </div>  
     </div>
 </body>
@@ -117,6 +135,10 @@
             }
         }
     }
+
+    function updateScore(score) {
+        document.querySelector(".score").innerHTML = "Score: " + score
+    }
     
     var gameLoop;
     var c = document.getElementById("myCanvas");
@@ -129,6 +151,7 @@
     var food;
     var gridWidth;
     var gridHeight;
+    var score = 0;
 
     function update() {
         updateSnakePosition()
@@ -176,11 +199,8 @@
     }
 
     function draw() {
+        blankScreen()
         var lastPosition = snake[snake.length -1]
-        ctx.fillStyle = 'lightgrey';
-        ctx.fillRect(0, 0, canvasWidth, canvasHeight)
-        ctx.strokeStyle = 'black';
-        ctx.strokeRect(0, 0, canvasWidth, canvasHeight)
         // draw snake
         snake.forEach(s => {
             ctx.beginPath();
@@ -194,6 +214,9 @@
         ctx.fillRect(food.x*snakeSize, food.y*snakeSize, snakeSize, snakeSize);
         ctx.strokeStyle = "yellow"
         ctx.strokeRect(food.x*snakeSize, food.y*snakeSize, snakeSize, snakeSize);
+        //
+        lockDirectionUntilDraw = false;
+
     }
 
     function collisions() {
@@ -203,6 +226,8 @@
         } else if(hasHeadHitFood()) {
             placeFood();
             extendSnakeSize()
+            score++;
+            updateScore(score)
             return false;
         } else {
             return false;
@@ -247,6 +272,7 @@
 
     window.onkeydown = function(event) {
         event.preventDefault()
+        if(lockDirectionUntilDraw) return
         if(event.keyCode == 39 && direction != "l") {
             direction = "r"
         }
@@ -259,20 +285,17 @@
         else if(event.keyCode == 40 && direction != "u") {
             direction = "d"
         }
+        lockDirectionUntilDraw = true;
     }
 
     function gameOver() {
         clearInterval(gameLoop)
+        blankScreen()
         document.querySelector(".beginScreen").style.display = "flex"
     }
 
     function gameStart() {
-        canvasWidth = c.clientWidth;
-        canvasHeight = c.clientHeight;
-        gridWidth = canvasWidth / snakeSize;
-        gridHeight = canvasHeight / snakeSize;
-        c.setAttribute("width", canvasWidth);
-        c.setAttribute("height", canvasHeight);        
+        score = 0;
         snake = [{x: 1, y: 1}, {x: 1, y: 2}, {x: 1, y: 3}]
         direction = "d"
         gameLoop = setInterval(function() {
@@ -283,6 +306,29 @@
         placeFood()
         document.querySelector(".beginScreen").style.display = "none";
     }
+
+    function calculateMeasurements() {
+        canvasWidth = c.clientWidth;
+        canvasHeight = c.clientHeight;
+        gridWidth = canvasWidth / snakeSize;
+        gridHeight = canvasHeight / snakeSize;
+        c.setAttribute("width", canvasWidth);
+        c.setAttribute("height", canvasHeight);        
+    }
+
+    function blankScreen() {
+        ctx.fillStyle = 'lightgrey';
+        ctx.fillRect(0, 0, canvasWidth, canvasHeight)
+        ctx.strokeStyle = 'black';
+        ctx.strokeRect(0, 0, canvasWidth, canvasHeight)        
+    }
+
+    calculateMeasurements()
+    blankScreen()
+
+
+    updateScore(score)
+
 
 </script>
 </html>
