@@ -19,6 +19,9 @@
         .beginScreen * {
             padding: 4px;
         }
+        i[direction] {
+            display: none;
+        }
         .beginScreen .btn {
             background-color: green;
             color: white;
@@ -98,13 +101,13 @@
             <div class="btn">eat some pizza</div>
         </div>
         <canvas id="myCanvas"></canvas>       
-        <div class="controls" style="display: none">
+        <div class="controls">
             <i direction="l" class="fa fa-arrow-circle-left"></i>
             <i direction="r" class="fa fa-arrow-circle-right"></i>
             <i direction="d" class="fa fa-arrow-circle-down"></i>
             <i direction="u" class="fa fa-arrow-circle-up"></i>
+            <div class="score">Score</div>
         </div>  
-        <div class="score">Score</div>
     </div>
 </body>
 
