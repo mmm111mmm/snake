@@ -19,9 +19,6 @@
         .beginScreen * {
             padding: 4px;
         }
-        i[direction] {
-            display: none;
-        }
         .beginScreen .btn {
             background-color: green;
             color: white;
@@ -38,9 +35,6 @@
                 height: 400px;
                 width: 400px;
             }
-            .controls {
-                height: 40px;
-            }
         }
         @media (max-width: 800px) {
             .beginScreen {
@@ -55,21 +49,6 @@
                 height: 98vh;
                 width: 98vw;
             }
-            .controls {
-                height: 10vh;
-            }
-        }
-        .controls {
-            display: flex;
-            overflow: hidden;
-        }
-        .controls {
-            margin: 0px;
-            padding: 0px;
-            margin-left: 3px;
-            margin-right: 3px;
-            font-size: 40px;
-            color: gray;
         }
         #container {
             position: relative;
@@ -101,42 +80,14 @@
             <div class="btn">eat some pizza</div>
         </div>
         <canvas id="myCanvas"></canvas>       
-        <div class="controls">
-            <i direction="l" class="fa fa-arrow-circle-left"></i>
-            <i direction="r" class="fa fa-arrow-circle-right"></i>
-            <i direction="d" class="fa fa-arrow-circle-down"></i>
-            <i direction="u" class="fa fa-arrow-circle-up"></i>
-            <div class="score">Score</div>
-        </div>  
+        <div class="score">Score</div>
     </div>
 </body>
 
 <script>
 
-    // Add score
-
     document.querySelector(".beginScreen").onclick = function(event) {
         gameStart()
-    }
-
-    var buttons = document.querySelectorAll(".controls *")
-    for(var i = 0; i < buttons.length; i++) {
-        buttons[i].onclick = function(event) {
-            console.log("clicked")
-            var buttonDirection = event.target.getAttribute("direction")
-            if(buttonDirection == "r" && direction != "l") {
-                direction = "r"
-            }
-            else if(buttonDirection == "l" && direction != "r") {
-                direction = "l"
-            }
-            else if(buttonDirection == "u" && direction != "d") {
-                direction = "u"
-            }
-            else if(buttonDirection == "d" && direction != "u") {
-                direction = "d"
-            }
-        }
     }
 
     function updateScore(score) {
